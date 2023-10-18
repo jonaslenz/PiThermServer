@@ -14,6 +14,7 @@ var fs = require('fs');
 var sys = require('sys');
 var http = require('http');
 var sqlite3 = require('sqlite3');
+const path = require('node:path');
 
 // Use node-static module to server chart for client-side dynamic graph
 var nodestatic = require('node-static');
@@ -27,16 +28,16 @@ var db = new sqlite3.Database('./piTemps.db');
 // Write a single temperature record in JSON format to database table.
 function insertTemp(data){
    // data is a javascript object   
-   var statement = db.prepare("INSERT INTO temperature_records VALUES (?, ?)");
+   var statement = db.prepare("INSERT INTO temperature_records VALUES (?, ?, ?)");
    // Insert values into prepared statement
-   statement.run(data.temperature_record[0].unix_time, data.temperature_record[0].celsius);
+   statement.run(data.temperature_record[0].sensorno, data.temperature_record[0].unix_time, data.temperature_record[0].celsius);
    // Execute the statement
    statement.finalize();
 }
 
 // Read current temperature from sensor
-function readTemp(callback){
-   fs.readFile('/sys/bus/w1/devices/28-00000400a88a/w1_slave', function(err, buffer)
+function readTemp(sensorid, callback){
+   fs.readFile(path.join('/sys/bus/w1/devices/',sensorid,'/w1_slave'), function(err, buffer)
 	{
       if (err){
          console.error(err);
@@ -55,6 +56,7 @@ function readTemp(callback){
       // Add date/time to temperature
    	var data = {
             temperature_record:[{
+	    sensorno: sensorid,
             unix_time: Date.now(),
             celsius: temp
             }]};
@@ -65,9 +67,9 @@ function readTemp(callback){
 };
 
 // Create a wrapper function which we'll use specifically for logging
-function logTemp(interval){
+function logTemp(sensorid, interval){
       // Call the readTemp function with the insertTemp function as output to get initial reading
-      readTemp(insertTemp);
+      readTemp(sensorid, insertTemp);
       // Set the repeat interval (milliseconds). Third argument is passed as callback function to first (i.e. readTemp(insertTemp)).
       setInterval(readTemp, interval, insertTemp);
 };
@@ -168,7 +170,7 @@ var server = http.createServer(
 
 // Start temperature logging (every 5 min).
 var msecs = (60 * 5) * 1000; // log interval duration in milliseconds
-logTemp(msecs);
+logTemp(sensorid, msecs);
 // Send a message to console
 console.log('Server is logging to database at '+msecs+'ms intervals');
 // Enable server
