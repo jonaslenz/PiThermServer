@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/talltom/PiThermServer",
   "dependencies": {
-    "sqlite3",
-    "node-static""
-  }
+    "sqlite3": ">2.1.19",
+    "node-static": ">0.7.3"  }
 }
