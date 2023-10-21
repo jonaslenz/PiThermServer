@@ -170,7 +170,7 @@ var server = http.createServer(
 
 // Start temperature logging (every 5 min).
 var msecs = (60 * 5) * 1000; // log interval duration in milliseconds
-logTemp(sensorid, msecs);
+logTemp("28-bb93431f64ff", msecs);
 // Send a message to console
 console.log('Server is logging to database at '+msecs+'ms intervals');
 // Enable server
