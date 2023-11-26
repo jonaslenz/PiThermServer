@@ -3,7 +3,6 @@ from gpiozero import LED
 from w1thermsensor import W1ThermSensor, Sensor
 
 axt = LED(17)
-axt.on()
 
 try:
     #sensor_list = pickle.load(sensordump)
@@ -26,10 +25,13 @@ except:
 Print(str(sensor_list))
 
 while True:
+    axt.on()
+    sleep(2)
     query = "http://XXXXXXX/HHHHHH/GET=YYYYYYYY"
     for sensor in W1ThermSensor.get_available_sensors():
         Print(sensor_list[sensor.id]["location"] + "reads" + str(sensor.gettemperature()))
         query += "&" + sensor_list[sensor.id]["thingspeak"] + "=" + str(sensor.gettemperature()))
+    axt.off()
     Print(query)
     #Print(curl query)
     sleep(60)
