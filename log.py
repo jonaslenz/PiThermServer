@@ -1,5 +1,6 @@
 #import pickle
 import requests
+from time import sleep
 from gpiozero import LED
 from w1thermsensor import W1ThermSensor, Sensor
 
