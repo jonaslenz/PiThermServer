@@ -23,22 +23,23 @@ except:
     myFile.write(str(sensor_list))
     myFile.close()
 
-Print(str(sensor_list))
+print(str(sensor_list))
 
 url = "http://XXXXXXX/HHHHHH/GET=YYYYYYYY"
-
-while True:
+i=0
+while i<10:
     axt.on()
     payload = {}
     sleep(2)
     for sensor in W1ThermSensor.get_available_sensors():
-        Print(sensor_list[sensor.id]["location"] + "reads" + str(sensor.gettemperature()))
+        print(sensor_list[sensor.id]["location"] + "reads" + str(sensor.gettemperature()))
         payload[sensor_list[sensor.id]["thingspeak"]] = sensor.gettemperature()
     axt.off()
 
-    res = requests.post(url, data=payload)
+    #res = requests.post(url, data=payload)
 
-    Print(str(payload))
-    Print(res)
-    res="last query not send."
+    print(str(payload))
+    #print(res)
+    #res="last query not send."
     sleep(60)
+    i++
