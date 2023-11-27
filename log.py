@@ -1,15 +1,19 @@
-#import pickle
+#send requests to Web api
 import requests
+#read dict as real progress dict
+import ast
+#allow program to pause
 from time import sleep
+#power to the sensor by Gpio 17, as efficient hardware usage
 from gpiozero import LED
+#library for w1 sensors 
 from w1thermsensor import W1ThermSensor, Sensor
 
 axt = LED(17)
 axt.on()
 try:
-    #sensor_list = pickle.load(sensordump)
     myFile = open('sample.txt', 'r')
-    sensor_list = myFile.read()
+    sensor_list = ast.literal_eval(myFile.read())
     myFile.close()
 except:
     sensor_list = {}
@@ -19,22 +23,21 @@ except:
         fieldid += 1
         if fieldid > 8:
             Print("Exeeding number of possible fields in free ThingSpeak.")
-    #pickle.dump(sensor_list,sensordump)
     myFile = open('sample.txt', 'w')
     myFile.write(str(sensor_list))
     myFile.close()
-
-print(str(sensor_list))
+axt.off()
+#print(str(sensor_list))
 
 url = "http://XXXXXXX/HHHHHH/GET=YYYYYYYY"
-i=0
-while i<10:
+
+while True:
     axt.on()
     payload = {}
     sleep(2)
     for sensor in W1ThermSensor.get_available_sensors():
-        print(sensor_list[sensor.id]["location"] + "reads" + str(sensor.get_temperature()))
-        payload[sensor_list[sensor.id]["thingspeak"]] = sensor.get_temperature()
+        print(sensor_list[str(sensor.id)]["location"] + "reads" + str(sensor.get_temperature()))
+        payload[sensor_list[str(sensor.id)]["thingspeak"]] = sensor.get_temperature()
     axt.off()
 
     #res = requests.post(url, data=payload)
@@ -42,5 +45,4 @@ while i<10:
     print(str(payload))
     #print(res)
     #res="last query not send."
-    sleep(60)
-    i+=1
+    sleep(5)
