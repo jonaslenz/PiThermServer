@@ -15,7 +15,7 @@ except:
     sensor_list = {}
     fieldid = 1
     for sensor in W1ThermSensor.get_available_sensors():
-        sensor_list[sensor.id] = {thingspeak:"field"+str(fieldid), location:"xx"}
+        sensor_list[sensor.id] = {"thingspeak":"field"+str(fieldid), "location":"xx"}
         fieldid += 1
         if fieldwork > 8:
             Print("Exeeding number of possible fields in free ThingSpeak.")
