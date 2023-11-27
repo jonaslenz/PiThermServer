@@ -17,7 +17,7 @@ except:
     for sensor in W1ThermSensor.get_available_sensors():
         sensor_list[sensor.id] = {"thingspeak":"field"+str(fieldid), "location":"xx"}
         fieldid += 1
-        if fieldwork > 8:
+        if fieldid > 8:
             Print("Exeeding number of possible fields in free ThingSpeak.")
     #pickle.dump(sensor_list,sensordump)
     myFile = open('sample.txt', 'w')
