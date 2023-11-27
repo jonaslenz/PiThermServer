@@ -42,4 +42,4 @@ while i<10:
     #print(res)
     #res="last query not send."
     sleep(60)
-    i++
+    i+=1
