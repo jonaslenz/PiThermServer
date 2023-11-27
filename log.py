@@ -5,7 +5,7 @@ from gpiozero import LED
 from w1thermsensor import W1ThermSensor, Sensor
 
 axt = LED(17)
-
+axt.on()
 try:
     #sensor_list = pickle.load(sensordump)
     myFile = open('sample.txt', 'r')
